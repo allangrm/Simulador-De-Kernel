@@ -33,6 +33,18 @@ public class LinkedList<T> {
         return data;
     }
 
+    public T searchElement(T  data){
+        NodeList<T> atual = head;
+        while (atual != null){
+            if (atual.getData().equals(data)){
+                return atual.getData();
+            }else {
+                atual = atual.getNext();
+            }
+        }
+        return null;
+    }
+
     public T getFirstElement(){
         return head.getData();
     }
