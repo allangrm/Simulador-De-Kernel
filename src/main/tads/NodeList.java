@@ -1,3 +1,5 @@
+package main.tads;
+
 /**
  * Representa um Nó específico para estruturas de dados lineares
  * <p>

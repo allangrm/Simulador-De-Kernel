@@ -1,3 +1,5 @@
+package main.tads;
+
 /**
  * Representa um Nó específico para a construção de Árvores Binárias.
  * <p>

@@ -1,3 +1,5 @@
+package main.tads;
+
 /**
  * Representa a implementação da estrutura: Lista Simplesmente Encadeada.
  * <p>

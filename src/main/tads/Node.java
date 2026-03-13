@@ -1,3 +1,5 @@
+package main.tads;
+
 /**
  * Representa a estrutura fundamental (Nó) base para a construção das estruturas de dados do sistema.
  * Utilizado para armazenar dados de qualquer tipo.
