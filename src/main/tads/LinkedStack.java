@@ -1,5 +1,6 @@
 package main.tads;
 
+
 /**
  * Representa a implementação da estrutura: Pilha utilizando Lista Encadeada.
  * <p>
@@ -15,7 +16,6 @@ package main.tads;
  * @version 1.0
  * @since 2026-03-12
  */
-
 public class LinkedStack<E> implements Stack<E> {
 
     private NodeList<E> top;

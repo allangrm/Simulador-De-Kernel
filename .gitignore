@@ -6,6 +6,9 @@ out/
 !**/src/test/**/out/
 gen/
 
+### Lucas
+*.bkp
+
 # Compilação Java
 *.class
 *.jar
