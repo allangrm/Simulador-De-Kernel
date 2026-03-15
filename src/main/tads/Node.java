@@ -9,7 +9,7 @@ package main.tads;
  * gerenciar diferentes objetos do dominio do mini-sistema.
  * </p>
  *
- * @param <T> o tipo de dado ou objeto que o nó irá armazenar.
+ * @param <T> o tipo de dado ou objeto que o No ira armazenar.
  * @author Allan
  * @version 1.0
  * @since 2026-03-11
@@ -18,7 +18,7 @@ public abstract class Node<T> {
     private T data;
 
     /**
-     * Cria um novo no com o dado informado.
+     * Cria um novo No com o dado informado.
      *
      * @param data dado armazenado no no.
      */
@@ -27,7 +27,7 @@ public abstract class Node<T> {
     }
 
     /**
-     * Retorna o dado armazenado no no.
+     * Retorna o dado armazenado no No.
      *
      * @return dado atualmente armazenado.
      */
@@ -36,7 +36,7 @@ public abstract class Node<T> {
     }
 
     /**
-     * Atualiza o dado armazenado no no.
+     * Atualiza o dado armazenado no No.
      *
      * @param data novo dado a ser armazenado.
      */

@@ -7,13 +7,14 @@ package main.tads;
  * para montar a lista, gerando uma sequencia de elementos encadeados.
  * </p>
  *
- * @param <T> o tipo de dado ou objeto que a lista irá armazenar.
+ * @param <E> o tipo de dado ou objeto que a lista irá armazenar.
  * @see NodeList
  * @author Allan
- * @version 1.0
+ * @version 1.2
+ * @since 2026-03-11
  */
-public class LinkedList<T> {
-    private NodeList<T> head;
+public class LinkedList<E> {
+    private NodeList<E> head;
     private int size;
 
     /**
@@ -25,11 +26,11 @@ public class LinkedList<T> {
     }
 
     /**
-     * Insere um elemento no inicio da lista.
+     * Insere um elemento No inicio da lista.
      *
      * @param data elemento a ser inserido.
      */
-    public void insertFirst(T data) {
+    public void insertFirst(E data) {
         head = new NodeList<>(data, head);
         size++;
     }
@@ -39,12 +40,12 @@ public class LinkedList<T> {
      *
      * @return elemento removido do inicio.
      */
-    public T removeFirst() {
+    public E removeFirst() {
         if (isEmpty()) {
             throw new IllegalArgumentException("A lista esta vazia.");
         }
 
-        T data = head.getData();
+        E data = head.getData();
         head = head.getNext();
         size--;
         return data;
@@ -56,8 +57,8 @@ public class LinkedList<T> {
      * @param data elemento procurado.
      * @return o elemento encontrado ou {@code null} quando inexistente.
      */
-    public T searchElement(T data) {
-        NodeList<T> currentNode = head;
+    public E searchElement(E data) {
+        NodeList<E> currentNode = head;
         while (currentNode != null) {
             if (currentNode.getData().equals(data)) {
                 return currentNode.getData();
@@ -73,7 +74,7 @@ public class LinkedList<T> {
      *
      * @return elemento da cabeca da lista.
      */
-    public T getFirstElement() {
+    public E getFirstElement() {
         return head.getData();
     }
 
@@ -96,11 +97,11 @@ public class LinkedList<T> {
     }
 
     /**
-     * Retorna o no inicial da lista.
+     * Retorna o No inicial da lista.
      *
      * @return cabeca atual da estrutura.
      */
-    public NodeList<T> getHead() {
+    public NodeList<E> getHead() {
         return head;
     }
 

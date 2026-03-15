@@ -1,23 +1,24 @@
 package main.tads;
 
 /**
- * Representa um no especifico para estruturas de dados lineares.
+ * Representa um No especifico para estruturas de dados lineares.
  * <p>
  * Esta classe herda de {@link Node} para armazenar os dados e
  * adiciona a capacidade de encadeamento atraves de uma referencia para o
- * proximo no da sequencia.
+ * proximo No da sequencia.
  * </p>
  *
- * @param <T> o tipo de dado ou objeto que o nó irá armazenar.
+ * @param <T> o tipo de dado ou objeto que o No irá armazenar.
  * @see Node
  * @author Allan
  * @version 1.0
+ * @since 2026-03-11
  */
 public class NodeList<T> extends Node<T> {
     private NodeList<T> next;
 
     /**
-     * Cria um no isolado para lista encadeada.
+     * Cria um No isolado para lista encadeada.
      *
      * @param data dado a ser armazenado.
      */
@@ -27,10 +28,10 @@ public class NodeList<T> extends Node<T> {
     }
 
     /**
-     * Cria um no ja encadeado ao proximo elemento.
+     * Cria um No ja encadeado ao proximo elemento.
      *
      * @param data dado a ser armazenado.
-     * @param next referencia para o proximo no.
+     * @param next referencia para o proximo No.
      */
     public NodeList(T data, NodeList<T> next) {
         super(data);
@@ -38,18 +39,18 @@ public class NodeList<T> extends Node<T> {
     }
 
     /**
-     * Retorna o proximo no da sequencia.
+     * Retorna o proximo No da sequencia.
      *
-     * @return referencia para o proximo no.
+     * @return referencia para o proximo No.
      */
     public NodeList<T> getNext() {
         return next;
     }
 
     /**
-     * Atualiza a referencia para o proximo no.
+     * Atualiza a referencia para o proximo No.
      *
-     * @param next novo proximo no da sequencia.
+     * @param next Novo proximo No da sequencia.
      */
     public void setNext(NodeList<T> next) {
         this.next = next;

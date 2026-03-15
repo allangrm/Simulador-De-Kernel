@@ -1,24 +1,25 @@
 package main.tads;
 
 /**
- * Representa um no especifico para a construcao de arvores binarias.
+ * Representa um No especifico para a construcao de arvores binarias.
  * <p>
- * Esta classe herda de {@link Node} para armazenar os dados. Este no expande
+ * Esta classe herda de {@link Node} para armazenar os dados. Este No expande
  * a estrutura adicionando duas ramificacoes, permitindo a navegacao baseada
  * em regras de ordenacao.
  * </p>
  *
- * @param <T> o tipo de dado ou objeto que o nó irá armazenar.
+ * @param <T> o tipo de dado ou objeto que o No ira armazenar.
  * @see Node
  * @author Allan
  * @version 1.0
+ * @since 2026-03-11
  */
 public class NodeTree<T> extends Node<T> {
     private NodeTree<T> right;
     private NodeTree<T> left;
 
     /**
-     * Cria um no de arvore sem filhos.
+     * Cria um No de arvore sem filhos.
      *
      * @param data dado a ser armazenado.
      */
@@ -29,7 +30,7 @@ public class NodeTree<T> extends Node<T> {
     }
 
     /**
-     * Cria um no de arvore com filhos definidos.
+     * Cria um No de arvore com filhos definidos.
      *
      * @param data dado a ser armazenado.
      * @param right referencia para o filho da direita.
