@@ -11,7 +11,7 @@ package main.tads;
  * @param <E> o tipo de dado ou objeto que o No irá armazenar.
  * @see NodeDouble
  * @author Allan
- * @version 1.0
+ * @version 1.1
  * @since 2026-03-14
  */
 public class DoublyCircularLinkedList<E> {
@@ -155,25 +155,31 @@ public class DoublyCircularLinkedList<E> {
     }
 
     /**
+     * Remove a primeira ocorrência do elemento especificado na lista.
+     * <p>
+     * O metodo realiza uma busca pelo dado e, caso encontrado, desvincula o nó
+     * correspondente ajustando os ponteiros dos nós vizinhos. Se o elemento
+     * estiver nas extremidades({@code head} ou {@code tail}), atribui a ação para os métodos apropriados.
+     * </p>
      *
-     * @param data
+     * @param data o dado a ser removido da lista.
      */
     public void removeElement(E data) {
         if(isEmpty()) throw new IllegalArgumentException("Lista está vazia");
-        NodeDouble<E> nodeAux = searchElement(data);
-        if(nodeAux == null) return;
+        NodeDouble<E> removedNode = searchElement(data);
+        if(removedNode == null) return;
 
-        if(nodeAux == head){
+        if(removedNode == head){
             removeFirst();
             return;
         }
 
-        if(nodeAux == tail){
+        if(removedNode == tail){
             removeLast();
             return;
         }
-        NodeDouble<E> previousNode = nodeAux.getPrevious();
-        NodeDouble<E> nextNode = nodeAux.getNext();
+        NodeDouble<E> previousNode = removedNode.getPrevious();
+        NodeDouble<E> nextNode = removedNode.getNext();
         previousNode.setNext(nextNode);
         nextNode.setPrevious(previousNode);
         size--;

@@ -5,7 +5,7 @@ package main.tads;
  * Utilizado para armazenar dados de qualquer tipo.
  * <p>
  * Esta classe e abstrata e serve como estrutura central para especializacoes como {@link NodeList}
- * e {@link NodeTree}. O uso de tipos genericos ({@code <T>}) garante que as estruturas possam
+ *, {@link NodeTree} e {@link NodeDouble}. O uso de tipos genericos ({@code <T>}) garante que as estruturas possam
  * gerenciar diferentes objetos do dominio do mini-sistema.
  * </p>
  *
