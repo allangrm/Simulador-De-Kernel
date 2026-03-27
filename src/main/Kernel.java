@@ -1,5 +1,6 @@
 package main;
 
+import main.tads.MaxHeapBinary;
 import main.tads.queue.Queue;
 import main.tads.queue.QueueDoubleStack;
 
@@ -12,10 +13,12 @@ import main.tads.queue.QueueDoubleStack;
  * since 2026-03-13
  */
 public class Kernel {
+	private static final int INITIAL_READY_CAPACITY = 10;
+
 	private final int quantum;
 	private int currentQuantum;
 	private Process cpu;
-	private final Queue<Process> readyQueue;
+	private final MaxHeapBinary<Process> readyQueue;
 	private final Queue<Process> ioBuffer;
 
 	/**
@@ -31,7 +34,7 @@ public class Kernel {
 		this.quantum = quantum;
 		this.currentQuantum = 0;
 		this.cpu = null;
-		this.readyQueue = new QueueDoubleStack<>();
+		this.readyQueue = new MaxHeapBinary<>(INITIAL_READY_CAPACITY);
 		this.ioBuffer = new QueueDoubleStack<>();
 	}
 
@@ -46,7 +49,7 @@ public class Kernel {
 		}
 
 		process.setState(State.READY);
-		readyQueue.enqueue(process);
+		readyQueue.insert(process);
 	}
 
 	/**
@@ -54,7 +57,7 @@ public class Kernel {
 	 */
 	public void dispatch() {
 		if (cpu == null && !readyQueue.isEmpty()) {
-			cpu = readyQueue.dequeue();
+			cpu = readyQueue.extractMax();
 			currentQuantum = 0;
 			cpu.setState(State.RUNNING);
 		}
@@ -72,7 +75,7 @@ public class Kernel {
 		dispatch();
 
 		if (cpu == null) {
-			incrementQueueWait(readyQueue);
+			incrementReadyQueueWait();
 			incrementQueueWait(ioBuffer);
 			return;
 		}
@@ -87,11 +90,11 @@ public class Kernel {
 			cpu = null;
 		} else if (cpu.getState() == State.RUNNING && currentQuantum == quantum) {
 			cpu.setState(State.READY);
-			readyQueue.enqueue(cpu);
+			readyQueue.insert(cpu);
 			cpu = null;
 		}
 
-		incrementQueueWait(readyQueue);
+		incrementReadyQueueWait();
 		incrementQueueWait(ioBuffer);
 	}
 
@@ -105,7 +108,17 @@ public class Kernel {
 
 		Process process = ioBuffer.dequeue();
 		process.setState(State.READY);
-		readyQueue.enqueue(process);
+		readyQueue.insert(process);
+	}
+
+	/**
+	 * Incrementa o tempo de espera de todos os processos presentes na heap de prontos.
+	 */
+	private void incrementReadyQueueWait() {
+		int size = readyQueue.size();
+		for (int i = 0; i < size; i++) {
+			readyQueue.getElementAt(i).incrementWait();
+		}
 	}
 
 	/**

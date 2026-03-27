@@ -60,6 +60,23 @@ public class KernelTest {
     }
 
     /**
+     * Verifica se o despacho prioriza o processo de maior prioridade.
+     */
+    @Test
+    public void testDispatchChoosesHighestPriorityProcess() {
+        Process lowPriorityProcess = createProcess(20, 1, 0, 3, 0);
+        Process highPriorityProcess = createProcess(21, 5, 0, 3, 0);
+        kernel.enqueueProcess(lowPriorityProcess);
+        kernel.enqueueProcess(highPriorityProcess);
+
+        kernel.dispatch();
+
+        assertSame(highPriorityProcess, kernel.getCpu(), "O processo de maior prioridade deve ser escolhido primeiro.");
+        assertEquals(State.RUNNING, highPriorityProcess.getState(), "O processo escolhido deve entrar em RUNNING.");
+        assertEquals(1, kernel.getReadyQueueSize(), "O outro processo deve permanecer aguardando na heap de prontos.");
+    }
+
+    /**
      * Verifica se um processo e finalizado e removido da CPU no ultimo ciclo.
      */
     @Test
@@ -154,7 +171,13 @@ public class KernelTest {
      * @return processo configurado para o cenário de teste.
      */
     private Process createProcess(int pid, int totalBurstTime, int ioThreshold) {
-        return new Process(pid, 1, 0, totalBurstTime, ioThreshold);
+        return createProcess(pid, 1, 0, totalBurstTime, ioThreshold);
+    }
+
+    /**
+     * Cria um processo configurando explicitamente a prioridade para cenarios de escalonamento.
+     */
+    private Process createProcess(int pid, int priority, int arrivalTime, int totalBurstTime, int ioThreshold) {
+        return new Process(pid, priority, arrivalTime, totalBurstTime, ioThreshold);
     }
 }
-
