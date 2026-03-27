@@ -1,6 +1,8 @@
 package main;
 
-import main.tads.MaxHeapBinary;
+import main.tads.bst.NodeTree;
+import main.tads.bst.avl.AVL;
+import main.tads.heap.MaxHeapBinary;
 import main.tads.queue.Queue;
 import main.tads.queue.QueueDoubleStack;
 
@@ -8,9 +10,9 @@ import main.tads.queue.QueueDoubleStack;
  * Simula o núcleo de escalonamento Round-Robin com foco em estados de processo
  * e controle de tempo por quantum.
  *
- * @author Lucas N. Araujo
+ * @author Lucas
  * @version 1.0
- * since 2026-03-13
+ * @since 2026-03-13
  */
 public class Kernel {
 	private static final int INITIAL_READY_CAPACITY = 10;
@@ -18,8 +20,29 @@ public class Kernel {
 	private final int quantum;
 	private int currentQuantum;
 	private Process cpu;
-	private final MaxHeapBinary<Process> readyQueue;
+	private final MaxHeapBinary<ReadyEntry> readyQueue;
 	private final Queue<Process> ioBuffer;
+	private final AVL<Process> processIndex;
+
+	/**
+	 * Encapsula um processo para ordenacao da heap por prioridade dinamica.
+	 */
+	private static final class ReadyEntry implements Comparable<ReadyEntry> {
+		private final Process process;
+
+		private ReadyEntry(Process process) {
+			this.process = process;
+		}
+
+		private Process getProcess() {
+			return process;
+		}
+
+		@Override
+		public int compareTo(ReadyEntry other) {
+			return this.process.compareByPriority(other.process);
+		}
+	}
 
 	/**
 	 * Cria um kernel com quantum fixo para preempção por tempo.
@@ -36,6 +59,7 @@ public class Kernel {
 		this.cpu = null;
 		this.readyQueue = new MaxHeapBinary<>(INITIAL_READY_CAPACITY);
 		this.ioBuffer = new QueueDoubleStack<>();
+		this.processIndex = new AVL<>();
 	}
 
 	/**
@@ -49,7 +73,8 @@ public class Kernel {
 		}
 
 		process.setState(State.READY);
-		readyQueue.insert(process);
+		processIndex.insert(new NodeTree<>(process));
+		readyQueue.insert(new ReadyEntry(process));
 	}
 
 	/**
@@ -57,7 +82,7 @@ public class Kernel {
 	 */
 	public void dispatch() {
 		if (cpu == null && !readyQueue.isEmpty()) {
-			cpu = readyQueue.extractMax();
+			cpu = readyQueue.extractMax().getProcess();
 			currentQuantum = 0;
 			cpu.setState(State.RUNNING);
 		}
@@ -73,6 +98,7 @@ public class Kernel {
 	 */
 	public void executeCycle() {
 		dispatch();
+		Process deferredReady = null;
 
 		if (cpu == null) {
 			incrementReadyQueueWait();
@@ -84,18 +110,23 @@ public class Kernel {
 		currentQuantum++;
 
 		if (cpu.getState() == State.FINISHED) {
+			processIndex.remove(new NodeTree<>(cpu));
 			cpu = null;
 		} else if (movedToIo || cpu.getState() == State.BLOCKED) {
 			ioBuffer.enqueue(cpu);
 			cpu = null;
 		} else if (cpu.getState() == State.RUNNING && currentQuantum == quantum) {
 			cpu.setState(State.READY);
-			readyQueue.insert(cpu);
+			deferredReady = cpu;
 			cpu = null;
 		}
 
 		incrementReadyQueueWait();
 		incrementQueueWait(ioBuffer);
+
+		if (deferredReady != null) {
+			readyQueue.insert(new ReadyEntry(deferredReady));
+		}
 	}
 
 	/**
@@ -108,7 +139,7 @@ public class Kernel {
 
 		Process process = ioBuffer.dequeue();
 		process.setState(State.READY);
-		readyQueue.insert(process);
+		readyQueue.insert(new ReadyEntry(process));
 	}
 
 	/**
@@ -116,8 +147,15 @@ public class Kernel {
 	 */
 	private void incrementReadyQueueWait() {
 		int size = readyQueue.size();
+		ReadyEntry[] snapshot = new ReadyEntry[size];
+
 		for (int i = 0; i < size; i++) {
-			readyQueue.getElementAt(i).incrementWait();
+			snapshot[i] = readyQueue.extractMax();
+			snapshot[i].getProcess().incrementWait();
+		}
+
+		for (int i = 0; i < size; i++) {
+			readyQueue.insert(snapshot[i]);
 		}
 	}
 
@@ -176,5 +214,39 @@ public class Kernel {
 	 */
 	public int getIoBufferSize() {
 		return ioBuffer.size();
+	}
+
+	/**
+	 * Retorna a quantidade de processos ativos indexados na AVL.
+	 *
+	 * @return total de processos atualmente ativos no indice por PID.
+	 */
+	public int getProcessIndexSize() {
+		return processIndex.size();
+	}
+
+	/**
+	 * Busca um processo ativo pelo PID no indice AVL.
+	 *
+	 * @param pid identificador do processo procurado.
+	 * @return processo correspondente ou {@code null} quando nao existir no indice.
+	 */
+	public Process findProcessByPid(int pid) {
+		if (pid <= 0) {
+			throw new IllegalArgumentException("O PID deve ser maior que zero.");
+		}
+
+		NodeTree<Process> result = processIndex.search(new NodeTree<>(createPidProbe(pid)));
+		if (result == null || result.isNil()) {
+			return null;
+		}
+		return result.getData();
+	}
+
+	/**
+	 * Cria um processo auxiliar apenas para comparacao por PID no indice AVL.
+	 */
+	private Process createPidProbe(int pid) {
+		return new Process(pid, 0, 0, 1, 0);
 	}
 }

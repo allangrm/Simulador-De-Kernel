@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Objects;
+
 
 /**
  * Representa um bloco de controle de processo (PCB) completo dentro do simulador de kernel.
@@ -11,15 +13,16 @@ package main;
  *
  * @author Lucas N. Araujo
  * @version 1.0
- * since 2026-03-13
+ * @since 2026-03-13
  */
 public class Process implements Comparable<Process> {
     private final int pid;
-    private final int priority;
+    private final int basePriority;
     private final int arrivalTime;
     private final int totalBurstTime;
     private final int ioThreshold;
 
+    private int priority;
     private int remainingTime;
     private int waitingTime;
     private int executedCycles;
@@ -35,8 +38,14 @@ public class Process implements Comparable<Process> {
      * @param ioThreshold limiar de ciclos para disparar bloqueio de I/O.
      */
     public Process(int pid, int priority, int arrivalTime, int totalBurstTime, int ioThreshold) {
+        if (pid <= 0) {
+            throw new IllegalArgumentException("O PID deve ser maior que zero.");
+        }
         if (totalBurstTime <= 0) {
             throw new IllegalArgumentException("O tempo total de CPU deve ser maior que zero.");
+        }
+        if (priority < 0) {
+            throw new IllegalArgumentException("A prioridade inicial nao pode ser negativa.");
         }
         if (arrivalTime < 0) {
             throw new IllegalArgumentException("O tempo de chegada não pode ser negativo.");
@@ -46,6 +55,7 @@ public class Process implements Comparable<Process> {
         }
 
         this.pid = pid;
+        this.basePriority = priority;
         this.priority = priority;
         this.arrivalTime = arrivalTime;
         this.totalBurstTime = totalBurstTime;
@@ -87,10 +97,17 @@ public class Process implements Comparable<Process> {
 
     /**
      * Incrementa o tempo de espera quando o processo está apto ou bloqueado.
+     * <p>
+     * Para simular prioridade dinâmica, processos em READY sofrem aging e
+     * recebem incremento de prioridade a cada ciclo de espera.
+     * </p>
      */
     public void incrementWait() {
         if (state == State.READY || state == State.BLOCKED) {
             waitingTime++;
+            if (state == State.READY) {
+                priority++;
+            }
         }
     }
 
@@ -110,6 +127,34 @@ public class Process implements Comparable<Process> {
      */
     public int getPriority() {
         return priority;
+    }
+
+    /**
+     * Retorna a prioridade base definida na criação do processo.
+     *
+     * @return prioridade inicial (sem aging).
+     */
+    public int getBasePriority() {
+        return basePriority;
+    }
+
+    /**
+     * Atualiza manualmente a prioridade dinâmica atual.
+     *
+     * @param priority nova prioridade dinâmica.
+     */
+    public void setPriority(int priority) {
+        if (priority < 0) {
+            throw new IllegalArgumentException("A prioridade não pode ser negativa.");
+        }
+        this.priority = priority;
+    }
+
+    /**
+     * Restaura a prioridade dinâmica para a prioridade base.
+     */
+    public void resetPriority() {
+        this.priority = this.basePriority;
     }
 
     /**
@@ -224,11 +269,25 @@ public class Process implements Comparable<Process> {
     }
 
     /**
-     * Define a ordenação natural por prioridade decrescente.
-     * Em empate de prioridade, usa PID para garantir resultado determinístico.
+     * Define a ordenação natural por PID (índice da AVL).
      */
     @Override
     public int compareTo(Process other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Não é possível comparar com um processo nulo.");
+        }
+
+        return Integer.compare(this.pid, other.pid);
+    }
+
+    /**
+     * Compara processos por prioridade dinâmica para uso no escalonador.
+     * Em empate de prioridade, usa PID para garantir resultado determinístico.
+     *
+     * @param other processo comparado.
+     * @return valor positivo quando este processo deve ter precedência.
+     */
+    public int compareByPriority(Process other) {
         if (other == null) {
             throw new IllegalArgumentException("Não é possível comparar com um processo nulo.");
         }
@@ -252,5 +311,32 @@ public class Process implements Comparable<Process> {
                 "[PID: %d | Prioridade: %d | Chegada: %d | Restante: %d | Espera: %d | Executado: %d | Estado: %s]",
                 pid, priority, arrivalTime, remainingTime, waitingTime, executedCycles, state
         );
+    }
+
+    /**
+     * Define igualdade semântica baseada exclusivamente no PID.
+     *
+     * @param obj objeto comparado.
+     * @return {@code true} quando ambos representam o mesmo PID.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Process other)) {
+            return false;
+        }
+        return this.pid == other.pid;
+    }
+
+    /**
+     * Retorna hash consistente com a igualdade por PID.
+     *
+     * @return hash baseado no PID.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(pid);
     }
 }

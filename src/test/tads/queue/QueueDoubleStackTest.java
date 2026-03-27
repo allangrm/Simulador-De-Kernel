@@ -1,4 +1,4 @@
-package test.tads;
+package test.tads.queue;
 
 import main.tads.queue.Queue;
 import main.tads.queue.QueueDoubleStack;

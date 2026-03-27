@@ -22,7 +22,9 @@ public class Main {
 
         System.out.println("=== Demonstração simples do Kernel Round-Robin ===");
         System.out.println("Quantum configurado: " + kernel.getQuantum());
+        System.out.println("Processos indexados na AVL (inicial): " + kernel.getProcessIndexSize());
         printProcesses(firstProcess, secondProcess, thirdProcess);
+        printProcessLookup(kernel, 2);
 
         int cycle = 1;
         while (!areAllFinished(firstProcess, secondProcess, thirdProcess) && cycle <= 12) {
@@ -37,11 +39,14 @@ public class Main {
             kernel.executeCycle();
             printKernelState(kernel);
             printProcesses(firstProcess, secondProcess, thirdProcess);
+            printProcessLookup(kernel, 2);
             cycle++;
         }
 
         System.out.println();
         System.out.println("=== Resumo final ===");
+        System.out.println("Processos indexados na AVL (final): " + kernel.getProcessIndexSize());
+        printProcessLookup(kernel, 2);
         printProcesses(firstProcess, secondProcess, thirdProcess);
     }
 
@@ -75,6 +80,27 @@ public class Main {
         System.out.println("Quantum atual: " + kernel.getCurrentQuantum());
         System.out.println("Fila READY: " + kernel.getReadyQueueSize() + " processo(s)");
         System.out.println("Buffer I/O: " + kernel.getIoBufferSize() + " processo(s)");
+        System.out.println("Indice AVL: " + kernel.getProcessIndexSize() + " processo(s) ativo(s)");
+    }
+
+    /**
+     * Exibe o resultado de uma busca por PID no índice AVL do kernel.
+     *
+     * @param kernel kernel utilizado na simulação.
+     * @param pid identificador do processo consultado.
+     */
+    private static void printProcessLookup(Kernel kernel, int pid) {
+        Process found = kernel.findProcessByPid(pid);
+        if (found == null) {
+            System.out.println("Busca AVL por PID " + pid + ": nao encontrado (ja finalizado ou inexistente).");
+            return;
+        }
+
+        System.out.println(
+                "Busca AVL por PID " + pid
+                        + ": encontrado em " + found.getState()
+                        + " com prioridade " + found.getPriority()
+        );
     }
 
     /**

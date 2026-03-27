@@ -1,4 +1,4 @@
-package main.tads;
+package main.tads.heap;
 
 /**
  * Classe que representa um heap binário máximo.
