@@ -10,8 +10,8 @@ import main.tads.queue.QueueDoubleStack;
  * Simula o núcleo de escalonamento Round-Robin com foco em estados de processo
  * e controle de tempo por quantum.
  *
- * @author Lucas
- * @version 1.0
+ * @author Lucas, Allan, Raffael
+ * @version 2.0
  * @since 2026-03-13
  */
 public class Kernel {
