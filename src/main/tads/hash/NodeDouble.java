@@ -1,6 +1,6 @@
 package main.tads.hash;
 
-import main.tads.linked_list.Node;
+import main.tads.Node;
 
 /**
  * Representa um No especifico para a construcao da Lista Duplamente Encadeada.

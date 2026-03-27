@@ -1,5 +1,7 @@
 package main.tads.linked_list;
 
+import main.tads.Node;
+
 /**
  * Representa um No especifico para estruturas de dados lineares.
  * <p>
