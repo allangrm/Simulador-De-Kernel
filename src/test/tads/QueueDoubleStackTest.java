@@ -1,7 +1,7 @@
 package test.tads;
 
-import main.tads.Queue;
-import main.tads.QueueDoubleStack;
+import main.tads.queue.Queue;
+import main.tads.queue.QueueDoubleStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

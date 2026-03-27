@@ -1,4 +1,4 @@
-package main.tads;
+package main.tads.stack;
 
 /**
  * Representa a interface da estrutura de dados: Pilha (Stack).

@@ -1,4 +1,4 @@
-package main.tads;
+package main.tads.queue;
 
 /**
  * Representa a interface da estrutura de dados: Fila (Queue).

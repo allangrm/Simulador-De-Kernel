@@ -1,4 +1,4 @@
-package main.tads;
+package main.tads.linked_list;
 
 /**
  * Representa um No especifico para estruturas de dados lineares.

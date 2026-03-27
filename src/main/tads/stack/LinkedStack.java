@@ -1,5 +1,7 @@
-package main.tads;
+package main.tads.stack;
 
+
+import main.tads.linked_list.NodeList;
 
 /**
  * Representa a implementação da estrutura: Pilha utilizando Lista Encadeada.

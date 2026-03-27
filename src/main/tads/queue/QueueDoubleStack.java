@@ -1,4 +1,7 @@
-package main.tads;
+package main.tads.queue;
+
+import main.tads.stack.LinkedStack;
+import main.tads.stack.Stack;
 
 /**
  * Representa a implementação da estrutura: Fila utilizando Duas Pilhas.

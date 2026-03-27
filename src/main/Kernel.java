@@ -1,7 +1,7 @@
 package main;
 
-import main.tads.Queue;
-import main.tads.QueueDoubleStack;
+import main.tads.queue.Queue;
+import main.tads.queue.QueueDoubleStack;
 
 /**
  * Simula o núcleo de escalonamento Round-Robin com foco em estados de processo

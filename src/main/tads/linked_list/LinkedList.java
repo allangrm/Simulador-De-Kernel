@@ -1,4 +1,4 @@
-package main.tads;
+package main.tads.linked_list;
 
 /**
  * Representa a implementação da estrutura: Lista Simplesmente Encadeada.

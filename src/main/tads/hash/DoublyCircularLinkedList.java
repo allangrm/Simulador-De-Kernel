@@ -1,4 +1,4 @@
-package main.tads;
+package main.tads.hash;
 /**
  * Representa a implementação da estrutura: Lista Duplamente Encadeada
  * com comportamento cíclico.

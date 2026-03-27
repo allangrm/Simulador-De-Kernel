@@ -1,4 +1,7 @@
-package main.tads;
+package main.tads.linked_list;
+
+import main.tads.bst.NodeTree;
+import main.tads.hash.NodeDouble;
 
 /**
  * Representa a estrutura fundamental base para a construcao das estruturas de dados do sistema.
