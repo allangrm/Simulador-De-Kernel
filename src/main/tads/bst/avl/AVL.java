@@ -16,7 +16,7 @@ import main.tads.bst.NodeTree;
  * @param <T> tipo de chave armazenada nos Nós.
  * @see BinarySearchTree
  * @see NodeTree
- * @author Lucas
+ * @author Lucas Nóbrega
  * @version 1.0
  * @since 2026-03-27
  */

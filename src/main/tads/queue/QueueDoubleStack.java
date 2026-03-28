@@ -14,7 +14,7 @@ import main.tads.stack.Stack;
  * @param <E> o tipo de elemento que a fila irá armazenar.
  * @see Queue
  * @see LinkedStack
- * @author Lucas N. Araujo
+ * @author Lucas Nóbrega
  * @version 1.0
  * @since 2026-03-13
  */

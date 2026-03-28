@@ -9,7 +9,7 @@ package main.tads.queue;
  * </p>
  *
  * @param <E> o tipo de elemento que a fila irá armazenar.
- * @author Lucas N. Araujo
+ * @author Lucas Nóbrega
  * @version 1.0
  * @since 2026-03-12
  * @version 1.0

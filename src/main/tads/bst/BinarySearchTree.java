@@ -4,7 +4,7 @@ package main.tads.bst;
  * Define o contrato de uma árvore binária de busca.
  *
  * @param <T> tipo de dado armazenado nos Nós da árvore.
- * @author Lucas
+ * @author Lucas Nóbrega
  * @version 1.0
  * @since 2026-03-27
  */

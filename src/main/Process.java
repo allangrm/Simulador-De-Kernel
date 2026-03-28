@@ -11,7 +11,7 @@ import java.util.Objects;
  * suporte a bloqueio por I/O.
  * </p>
  *
- * @author Lucas N. Araujo
+ * @author Lucas Nóbrega
  * @version 1.0
  * @since 2026-03-13
  */

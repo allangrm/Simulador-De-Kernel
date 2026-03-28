@@ -12,7 +12,7 @@ import main.tads.Node;
  *
  * @param <T> o tipo de dado ou objeto que o Nó irá armazenar.
  * @see Node
- * @author Allan, Lucas
+ * @author Allan, Lucas Nóbrega
  * @version 2.0
  * @since 2026-03-11
  */

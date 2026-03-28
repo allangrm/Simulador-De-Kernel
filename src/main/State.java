@@ -7,7 +7,7 @@ package main;
  * o escalonamento Round-Robin e o controle de I/O do simulador.
  * </p>
  *
- * @author Lucas N. Araujo
+ * @author Lucas Nóbrega
  * @version 1.0
  * @since 2026-03-13
  */
