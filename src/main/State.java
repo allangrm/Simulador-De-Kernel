@@ -9,7 +9,7 @@ package main;
  *
  * @author Lucas N. Araujo
  * @version 1.0
- * since 2026-03-13
+ * @since 2026-03-13
  */
 public enum State {
     /**

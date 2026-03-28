@@ -11,7 +11,7 @@ package main.tads.queue;
  * @param <E> o tipo de elemento que a fila irá armazenar.
  * @author Lucas N. Araujo
  * @version 1.0
- * since 2026-03-12
+ * @since 2026-03-12
  * @version 1.0
  */
 public interface Queue<E> {
