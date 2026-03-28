@@ -181,6 +181,28 @@ public class Kernel {
 		}
 	}
 
+
+	/**
+	 * Busca um processo ativo pelo PID na Tabela Hash (PCB).
+	 *
+	 * @param pid identificador do processo procurado.
+	 * @return processo correspondente ou {@code null} quando nao existir no indice.
+	 */
+	public Process findProcessByPid(int pid) {
+		if (pid <= 0) {
+			throw new IllegalArgumentException("O PID deve ser maior que zero.");
+		}
+
+		return processTable.search(createPidProbe(pid));
+	}
+
+	/**
+	 * Cria um processo auxiliar apenas para comparacao por PID no indice AVL.
+	 */
+	private Process createPidProbe(int pid) {
+		return new Process(pid, 0, 0, 1, 0);
+	}
+
 	/**
 	 * Retorna o quantum configurado para o escalonador.
 	 *
@@ -242,26 +264,5 @@ public class Kernel {
 	 */
 	public int getProcessTableSize(){
 		return processTable.getSize();
-	}
-
-	/**
-	 * Busca um processo ativo pelo PID na Tabela Hash (PCB).
-	 *
-	 * @param pid identificador do processo procurado.
-	 * @return processo correspondente ou {@code null} quando nao existir no indice.
-	 */
-	public Process findProcessByPid(int pid) {
-		if (pid <= 0) {
-			throw new IllegalArgumentException("O PID deve ser maior que zero.");
-		}
-
-		return processTable.search(createPidProbe(pid));
-	}
-
-	/**
-	 * Cria um processo auxiliar apenas para comparacao por PID no indice AVL.
-	 */
-	private Process createPidProbe(int pid) {
-		return new Process(pid, 0, 0, 1, 0);
 	}
 }
