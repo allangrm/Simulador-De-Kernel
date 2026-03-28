@@ -29,7 +29,7 @@ public class KernelTest {
      */
     @BeforeEach
     public void setUp() {
-        kernel = new Kernel(2);
+        kernel = new Kernel(2,11);
     }
 
     /**
@@ -39,13 +39,13 @@ public class KernelTest {
     public void testKernelConstructorRejectsInvalidQuantum() {
         IllegalArgumentException zeroQuantum = assertThrows(
                 IllegalArgumentException.class,
-                () -> new Kernel(0)
+                () -> new Kernel(0,11)
         );
         assertEquals("O quantum deve ser maior que zero.", zeroQuantum.getMessage());
 
         IllegalArgumentException negativeQuantum = assertThrows(
                 IllegalArgumentException.class,
-                () -> new Kernel(-2)
+                () -> new Kernel(-2,11)
         );
         assertEquals("O quantum deve ser maior que zero.", negativeQuantum.getMessage());
     }
@@ -120,7 +120,7 @@ public class KernelTest {
      */
     @Test
     public void testAgingAffectsSchedulingOrder() {
-        Kernel agingKernel = new Kernel(1);
+        Kernel agingKernel = new Kernel(1,11);
 
         Process dominantProcess = createProcess(100, 5, 0, 20, 0);
         Process waitingProcess = createProcess(1, 1, 0, 6, 0);

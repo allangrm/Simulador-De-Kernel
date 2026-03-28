@@ -89,6 +89,9 @@ public class HashTable<E> {
      */
     public E search(E data){
         int index = calculateIndex(data);
+
+        if (table[index].isEmpty()) return null;
+
         NodeDouble<E> nodeAux = table[index].searchElement(data);
         if(nodeAux !=null) {
             return nodeAux.getData();
@@ -103,7 +106,7 @@ public class HashTable<E> {
      */
     public void remove(E data){
         int index = calculateIndex(data);
-        if (isEmpty()) throw new IllegalArgumentException("Lista vazia");
+        if (table[index].isEmpty()) return;
 
         if(table[index].searchElement(data) !=null){
             table[index].removeElement(data);

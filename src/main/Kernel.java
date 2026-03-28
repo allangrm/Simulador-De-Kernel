@@ -2,6 +2,8 @@ package main;
 
 import main.tads.bst.NodeTree;
 import main.tads.bst.avl.AVL;
+import main.tads.hash.HashTable;
+import main.tads.hash.NodeDouble;
 import main.tads.heap.MaxHeapBinary;
 import main.tads.queue.Queue;
 import main.tads.queue.QueueDoubleStack;
@@ -21,6 +23,7 @@ public class Kernel {
 	private int currentQuantum;
 	private Process cpu;
 	private final MaxHeapBinary<ReadyEntry> readyQueue;
+	private final HashTable<Process> processTable;
 	private final Queue<Process> ioBuffer;
 	private final AVL<Process> processIndex;
 
@@ -49,7 +52,7 @@ public class Kernel {
 	 *
 	 * @param quantum limite máximo de ciclos contínuos na CPU.
 	 */
-	public Kernel(int quantum) {
+	public Kernel(int quantum, int capacity) {
 		if (quantum <= 0) {
 			throw new IllegalArgumentException("O quantum deve ser maior que zero.");
 		}
@@ -59,6 +62,7 @@ public class Kernel {
 		this.cpu = null;
 		this.readyQueue = new MaxHeapBinary<>(INITIAL_READY_CAPACITY);
 		this.ioBuffer = new QueueDoubleStack<>();
+		this.processTable = new HashTable<>(capacity);
 		this.processIndex = new AVL<>();
 	}
 
@@ -72,9 +76,14 @@ public class Kernel {
 			throw new IllegalArgumentException("O processo não pode ser nulo.");
 		}
 
+		if (findProcessByPid(process.getPid()) != null) {
+			throw new IllegalArgumentException("Conflito no Kernel: O PID " + process.getPid() + " já está em uso por outro processo ativo.");
+		}
+
 		process.setState(State.READY);
 		processIndex.insert(new NodeTree<>(process));
 		readyQueue.insert(new ReadyEntry(process));
+		processTable.insert(process);
 	}
 
 	/**
@@ -111,6 +120,7 @@ public class Kernel {
 
 		if (cpu.getState() == State.FINISHED) {
 			processIndex.remove(new NodeTree<>(cpu));
+			processTable.remove(cpu);
 			cpu = null;
 		} else if (movedToIo || cpu.getState() == State.BLOCKED) {
 			ioBuffer.enqueue(cpu);
@@ -226,7 +236,16 @@ public class Kernel {
 	}
 
 	/**
-	 * Busca um processo ativo pelo PID no indice AVL.
+	 * Retorna a quantidade de processos indexados na Tabela Hash (PCB).
+	 *
+	 * @return total de processos no Bloco de Controle de Processos.
+	 */
+	public int getProcessTableSize(){
+		return processTable.getSize();
+	}
+
+	/**
+	 * Busca um processo ativo pelo PID na Tabela Hash (PCB).
 	 *
 	 * @param pid identificador do processo procurado.
 	 * @return processo correspondente ou {@code null} quando nao existir no indice.
@@ -236,11 +255,7 @@ public class Kernel {
 			throw new IllegalArgumentException("O PID deve ser maior que zero.");
 		}
 
-		NodeTree<Process> result = processIndex.search(new NodeTree<>(createPidProbe(pid)));
-		if (result == null || result.isNil()) {
-			return null;
-		}
-		return result.getData();
+		return processTable.search(createPidProbe(pid));
 	}
 
 	/**
