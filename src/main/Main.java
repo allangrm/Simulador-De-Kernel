@@ -13,7 +13,6 @@ public class Main {
      * @param args argumentos de linha de comando nao utilizados.
      */
     public static void main(String[] args) {
-        // Inicializa o Kernel com Quantum 2 e Tabela Hash com capacidade base 11
         Kernel kernel = new Kernel(2, 11);
 
         Process firstProcess = new Process(1, 3, 0, 4, 0);
@@ -29,7 +28,6 @@ public class Main {
         System.out.println("Tamanho inicial da Hash (PCB): " + kernel.getProcessTableSize());
         System.out.println("Processos indexados na AVL (inicial): " + kernel.getProcessIndexSize());
 
-        // 1. Demonstração da Trava de Segurança contra PID duplicado
         System.out.println("\n[Teste de Segurança] Tentando inserir processo com PID duplicado...");
         try {
             Process duplicateProcess = new Process(1, 5, 0, 10, 0);
@@ -45,7 +43,6 @@ public class Main {
         printProcessLookup(kernel, 3);
 
         int cycle = 1;
-        // Limite de 15 ciclos para garantir que o laço não fique infinito
         while (!areAllFinished(firstProcess, secondProcess, thirdProcess) && cycle <= 15) {
             System.out.println();
             System.out.println("--- Ciclo " + cycle + " ---");
@@ -60,7 +57,6 @@ public class Main {
             printKernelState(kernel);
             printProcesses(firstProcess, secondProcess, thirdProcess);
 
-            // Busca rápida em O(1) na Hash
             printProcessLookup(kernel, 1);
             printProcessLookup(kernel, 2);
             printProcessLookup(kernel, 3);
