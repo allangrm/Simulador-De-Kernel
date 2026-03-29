@@ -36,9 +36,9 @@ Para simular o comportamento de um computador real, cada estrutura de dados exig
 
 ## 👨‍💻 Autores (Grupo)
 
-* **Lucas Nóbrega** - [https://github.com/lucrasn] - 2024108510009
-* **Allan Guilherme** - [https://github.com/allangrm] - 2024108510029
-* **Raffael Wagner** - [https://github.com/Raffael-Wagner] - 2024108510044
+* **Lucas Nóbrega** - [https://github.com/lucrasn] 
+* **Allan Guilherme** - [https://github.com/allangrm]
+* **Raffael Wagner** - [https://github.com/Raffael-Wagner]
 
 ---
 
