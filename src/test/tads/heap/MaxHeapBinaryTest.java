@@ -1,4 +1,4 @@
-package test.tads;
+package test.tads.heap;
 
 import main.tads.heap.MaxHeapBinary;
 import org.junit.jupiter.api.BeforeEach;
