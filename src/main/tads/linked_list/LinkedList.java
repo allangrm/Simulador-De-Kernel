@@ -9,7 +9,7 @@ package main.tads.linked_list;
  *
  * @param <E> o tipo de dado ou objeto que a lista irá armazenar.
  * @see NodeList
- * @author Allan
+ * @author Allan Guilherme
  * @version 1.2
  * @since 2026-03-11
  */

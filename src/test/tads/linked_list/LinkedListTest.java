@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * </p>
  *
  * @see LinkedList
- * @author Allan
+ * @author Allan Guilherme
  * @version 1.0
  * @since 2026-03-28
  */

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * e o retorno de processos para a fila de prontos.
  * </p>
  *
- * @author Lucas, Raffael
+ * @author Lucas, Raffael, Allan Guilherme
  * @version 2.0
  * @since 2026-03-17
  */
@@ -209,7 +209,7 @@ public class KernelTest {
     }
 
     /**
-     * Verifica se resolveIO em buffer vazio nao altera o estado global do kernel.
+     * Verifica se resolveIO em buffer vazio nao altera o estado global do kernel e suas estruturas.
      */
     @Test
     public void testResolveIoOnEmptyBufferDoesNothing() {
@@ -218,12 +218,14 @@ public class KernelTest {
 
         int readyBefore = kernel.getReadyQueueSize();
         int indexBefore = kernel.getProcessIndexSize();
+        int tableBefore = kernel.getProcessTableSize();
 
         kernel.resolveIO();
 
         assertEquals(readyBefore, kernel.getReadyQueueSize(), "A fila READY nao deve ser alterada sem processos bloqueados.");
         assertEquals(0, kernel.getIoBufferSize(), "O buffer de I/O deve permanecer vazio.");
         assertEquals(indexBefore, kernel.getProcessIndexSize(), "O indice AVL nao deve sofrer alteracoes.");
+        assertEquals(tableBefore, kernel.getProcessTableSize(), "A Tabela Hash nao deve sofrer alteracoes.");
         assertNull(kernel.getCpu(), "A CPU deve permanecer livre quando nao ha despacho no metodo resolveIO.");
     }
 
@@ -284,10 +286,10 @@ public class KernelTest {
     }
 
     /**
-     * Verifica se o tamanho do indice AVL acompanha o ciclo de vida dos processos.
+     * Verifica se o tamanho do indice AVL e da Tabela Hash acompanham o ciclo de vida dos processos.
      */
     @Test
-    public void testProcessIndexSizeReflectsLifecycle() {
+    public void testProcessStructuresSizeReflectsLifecycle() {
         Process p1 = createProcess(80, 1, 0);
         Process p2 = createProcess(81, 1, 0);
         Process p3 = createProcess(82, 1, 0);
@@ -296,20 +298,24 @@ public class KernelTest {
         kernel.enqueueProcess(p2);
         kernel.enqueueProcess(p3);
 
-        assertEquals(3, kernel.getProcessIndexSize(), "A AVL deve conter todos os processos ativos apos os enqueues.");
+        assertEquals(3, kernel.getProcessIndexSize(), "A AVL deve conter todos os processos ativos.");
+        assertEquals(3, kernel.getProcessTableSize(), "A Tabela Hash (PCB) deve registrar todos os processos ativos.");
 
         kernel.executeCycle();
         assertEquals(2, kernel.getProcessIndexSize(), "A AVL deve reduzir para 2 apos a primeira finalizacao.");
+        assertEquals(2, kernel.getProcessTableSize(), "A Tabela Hash deve reduzir para 2 apos a primeira finalizacao.");
 
         kernel.executeCycle();
-        assertEquals(1, kernel.getProcessIndexSize(), "A AVL deve reduzir para 1 apos a segunda finalizacao.");
+        assertEquals(1, kernel.getProcessIndexSize(), "A AVL deve reduzir para 1.");
+        assertEquals(1, kernel.getProcessTableSize(), "A Tabela Hash deve reduzir para 1.");
 
         kernel.executeCycle();
-        assertEquals(0, kernel.getProcessIndexSize(), "A AVL deve ficar vazia apos a finalizacao de todos os processos.");
+        assertEquals(0, kernel.getProcessIndexSize(), "A AVL deve ficar vazia apos a finalizacao total.");
+        assertEquals(0, kernel.getProcessTableSize(), "A Tabela Hash deve ficar vazia apos a finalizacao total.");
     }
 
     /**
-     * Verifica consulta por PID no índice AVL durante vida ativa e após finalização.
+     * Verifica consulta por PID na Tabela Hash durante vida ativa e após finalização.
      */
     @Test
     public void testFindProcessByPidFindsActiveProcessAndReturnsNullAfterFinish() {
@@ -317,13 +323,15 @@ public class KernelTest {
 
         kernel.enqueueProcess(process);
         assertEquals(1, kernel.getProcessIndexSize(), "A AVL deve indexar o processo ativo após enqueue.");
-        assertSame(process, kernel.findProcessByPid(30), "A busca por PID deve retornar o processo ativo.");
+        assertEquals(1, kernel.getProcessTableSize(), "A Tabela Hash deve registrar o processo ativo após enqueue.");
+        assertSame(process, kernel.findProcessByPid(30), "A busca por PID (O(1)) deve retornar o processo ativo da Hash.");
 
         kernel.executeCycle();
 
         assertEquals(State.FINISHED, process.getState(), "O processo deve finalizar no primeiro ciclo deste cenário.");
-        assertNull(kernel.findProcessByPid(30), "Após finalizar, o processo deve sair do índice AVL.");
-        assertEquals(0, kernel.getProcessIndexSize(), "O tamanho da AVL deve decrementar após remoção do finalizado.");
+        assertNull(kernel.findProcessByPid(30), "Após finalizar, o processo deve sair do PCB.");
+        assertEquals(0, kernel.getProcessIndexSize(), "O tamanho da AVL deve decrementar após remoção.");
+        assertEquals(0, kernel.getProcessTableSize(), "O tamanho da Tabela Hash deve decrementar após remoção.");
     }
 
     /**
@@ -342,6 +350,25 @@ public class KernelTest {
                 () -> kernel.findProcessByPid(-10)
         );
         assertEquals("O PID deve ser maior que zero.", negativePid.getMessage());
+    }
+    /**
+     * Verifica se o kernel rejeita a entrada de processos com PIDs duplicados,
+     * garantindo a integridade da Tabela Hash e da AVL.
+     */
+    @Test
+    public void testEnqueueProcessRejectsDuplicatePid() {
+        Process process1 = createProcess(100, 4, 0);
+        Process process2 = createProcess(100, 2, 0);
+
+        kernel.enqueueProcess(process1);
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> kernel.enqueueProcess(process2)
+        );
+
+        assertEquals("Conflito no Kernel: O PID 100 já está em uso por outro processo ativo.", exception.getMessage());
+        assertEquals(1, kernel.getProcessTableSize(), "A Hash não deve inserir o processo duplicado.");
     }
 
     /**

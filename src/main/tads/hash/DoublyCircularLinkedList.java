@@ -10,7 +10,7 @@ package main.tads.hash;
  *
  * @param <E> o tipo de dado ou objeto que o No irá armazenar.
  * @see NodeDouble
- * @author Allan
+ * @author Allan Guilherme
  * @version 1.1
  * @since 2026-03-14
  */

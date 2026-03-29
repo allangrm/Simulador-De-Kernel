@@ -23,7 +23,7 @@ package main.tads.hash;
  * </p>
  *
  * @param <E> o tipo de elemento a ser armazenado nesta Tabela Hash.
- * @author Allan
+ * @author Allan Guilherme
  * @version 1.1
  * @since 2026-03-14
  */

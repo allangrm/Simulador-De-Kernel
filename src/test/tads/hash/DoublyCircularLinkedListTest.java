@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * </p>
  *
  * @see DoublyCircularLinkedList
- * @author Allan
+ * @author Allan Guilherme
  * @version 1.0
  * @since 2026-03-28
  */
@@ -33,8 +33,6 @@ public class DoublyCircularLinkedListTest {
         list = new DoublyCircularLinkedList<>();
     }
 
-    // --- TESTES DE INICIALIZAÇÃO ---
-
     /**
      * Verifica se o construtor inicializa a lista vazia corretamente,
      * garantindo que head, tail sejam nulos e o tamanho seja zero.
@@ -44,7 +42,7 @@ public class DoublyCircularLinkedListTest {
         assertTrue(list.isEmpty(), "A lista instanciada deve ser vazia");
         assertEquals(0, list.getSize(), "O tamanho inicil da lista vazia deve ser 0");
         assertNull(list.getHead(), "Head deve ser nulo");
-        assertNull(list.getTail(),"Tail deve ser nulo");
+        assertNull(list.getTail(), "Tail deve ser nulo");
     }
 
     // --- TESTES DE INSERÇÃO ---
@@ -55,14 +53,13 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testInsertFirstInEmptyListEstablishesCircularity() {
-        // TODO: Inserir 1 elemento e verificar se head == tail e se head.getNext() == head
         list.insertFirst(10);
 
         assertFalse(list.isEmpty(), "A lista não deve estar vazia após a inserção.");
         assertEquals(1, list.getSize(), "O tamanho da lista deve ser 1 após uma inserção.");
         assertEquals(10, list.getFirstElement(), "O elemento inserido deve estar no início da lista.");
-        assertEquals(list.getHead(), list.getHead().getNext(),"Com apenas 1 item, o proximo  elemento deve apontar para si mesmo");
-        assertEquals(list.getHead(), list.getTail(),"Com apenas 1 item, Head e Tail devem estar no mesmo local");
+        assertEquals(list.getHead(), list.getHead().getNext(), "Com apenas 1 item, o proximo  elemento deve apontar para si mesmo");
+        assertEquals(list.getHead(), list.getTail(), "Com apenas 1 item, Head e Tail devem estar no mesmo local");
 
     }
 
@@ -90,14 +87,13 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testInsertLastInEmptyListEstablishesCircularity() {
-        // TODO: Implementar asserções para insertLast em lista vazia
         list.insertLast(20);
 
         assertFalse(list.isEmpty(), "A lista não deve estar vazia após a inserção.");
         assertEquals(20, list.getLastElement(), "O último elemento deve ser 20");
         assertEquals(1, list.getSize(), "O tamanho da lista deve ser 1 após uma inserção.");
-        assertEquals(list.getTail(), list.getTail().getPrevious(),"Com apenas 1 elemento, o ultimo elemento aponta para si mesmo");
-        assertEquals(list.getTail(), list.getHead(),"Com apenas 1 elemento, Tail deve ser igual a Head");
+        assertEquals(list.getTail(), list.getTail().getPrevious(), "Com apenas 1 elemento, o ultimo elemento aponta para si mesmo");
+        assertEquals(list.getTail(), list.getHead(), "Com apenas 1 elemento, Tail deve ser igual a Head");
     }
 
     /**
@@ -106,7 +102,6 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testInsertLastInPopulatedListUpdatesTailAndCircularity() {
-        // TODO: Inserir múltiplos elementos no final e validar ponteiros extremos
 
         list.insertLast(10);
         list.insertLast(20);
@@ -119,7 +114,6 @@ public class DoublyCircularLinkedListTest {
         assertEquals(10, list.getTail().getNext().getData(), "O proximo de 30(Tail) deve ser 10(Head)");
     }
 
-    // --- TESTES DE REMOÇÃO EXTREMA ---
 
     /**
      * Verifica se a remoção do primeiro elemento extrai o dado correto,
@@ -127,8 +121,18 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testRemoveFirstExtractsDataAndMaintainsCircularity() {
-        // TODO: Inserir elementos, dar removeFirst e validar o novo head e a conexão com o tail
+        list.insertLast(10);
+        list.insertLast(20);
+        list.insertLast(30);
 
+        int removed = list.removeFirst();
+
+        assertEquals(10, removed, "O dado extraído deve ser 10 (antigo Head).");
+        assertEquals(2, list.getSize(), "O tamanho deve cair para 2.");
+        assertEquals(20, list.getFirstElement(), "O novo Head deve ser 20.");
+
+        assertEquals(30, list.getHead().getPrevious().getData(), "O anterior do novo Head (20) deve ser o Tail (30).");
+        assertEquals(20, list.getTail().getNext().getData(), "O próximo do Tail (30) deve ser o novo Head (20).");
     }
 
     /**
@@ -137,7 +141,18 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testRemoveLastExtractsDataAndMaintainsCircularity() {
-        // TODO: Inserir elementos, dar removeLast e validar o novo tail e a conexão com o head
+        list.insertLast(10);
+        list.insertLast(20);
+        list.insertLast(30);
+
+        int removed = list.removeLast();
+
+        assertEquals(30, removed, "O dado extraído deve ser 30 (antigo Tail).");
+        assertEquals(2, list.getSize(), "O tamanho deve cair para 2.");
+        assertEquals(20, list.getLastElement(), "O novo Tail deve ser 20.");
+
+        assertEquals(20, list.getHead().getPrevious().getData(), "O anterior do Head (10) deve ser o novo Tail (20).");
+        assertEquals(10, list.getTail().getNext().getData(), "O próximo do novo Tail (20) deve ser o Head (10).");
     }
 
     /**
@@ -146,10 +161,15 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testRemoveExtremesOnSingleElementListClearsStructure() {
-        // TODO: Inserir 1 elemento, remover, e garantir que a lista voltou ao estado zero
+        list.insertFirst(10);
+        list.removeFirst(); // Também poderia ser removeLast()
+
+        assertTrue(list.isEmpty(), "A lista deve voltar a ficar vazia.");
+        assertEquals(0, list.getSize(), "O tamanho deve zerar.");
+        assertNull(list.getHead(), "O Head deve voltar a ser nulo.");
+        assertNull(list.getTail(), "O Tail deve voltar a ser nulo.");
     }
 
-    // --- TESTES DE REMOÇÃO DE ELEMENTO ESPECÍFICO ---
 
     /**
      * Verifica se o método removeElement consegue remover dados nas
@@ -157,7 +177,17 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testRemoveElementAtHeadAndTail() {
-        // TODO: Inserir 3 elementos, pedir para remover o do início e o do fim via removeElement()
+        list.insertLast(10);
+        list.insertLast(20);
+        list.insertLast(30);
+
+        list.removeElement(10); // Removendo Head
+        assertEquals(20, list.getFirstElement(), "O novo Head deve ser 20 após remover o 10.");
+        assertEquals(2, list.getSize());
+
+        list.removeElement(30); // Removendo Tail
+        assertEquals(20, list.getLastElement(), "O novo Tail deve ser 20 após remover o 30.");
+        assertEquals(1, list.getSize());
     }
 
     /**
@@ -166,10 +196,20 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testRemoveElementInMiddleMaintainsListIntegrity() {
-        // TODO: Inserir 3 elementos, pedir para remover o do meio e checar se o 1º e o 3º se conectaram
+        list.insertLast(10);
+        list.insertLast(20);
+        list.insertLast(30);
+
+        list.removeElement(20); // Removendo o do meio
+
+        assertEquals(2, list.getSize(), "O tamanho deve ser 2.");
+        assertEquals(10, list.getFirstElement(), "O Head continua sendo 10.");
+        assertEquals(30, list.getLastElement(), "O Tail continua sendo 30.");
+
+        assertEquals(30, list.getHead().getNext().getData(), "O próximo de 10 deve ser direto o 30.");
+        assertEquals(10, list.getTail().getPrevious().getData(), "O anterior de 30 deve ser direto o 10.");
     }
 
-    // --- TESTES DE BUSCA E EXCEÇÕES ---
 
     /**
      * Verifica se a busca bidirecional localiza elementos que estão mais
@@ -177,7 +217,19 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testSearchElementFindsDataViaBidirectionalTraversal() {
-        // TODO: Popular lista, buscar elemento inicial e final, garantindo que retorna o Nó correto
+        list.insertLast(10);
+        list.insertLast(20);
+        list.insertLast(30);
+        list.insertLast(40);
+
+        NodeDouble<Integer> nodeHeadSide = list.searchElement(20);
+        NodeDouble<Integer> nodeTailSide = list.searchElement(30);
+
+        assertNotNull(nodeHeadSide, "A busca deve encontrar o 20.");
+        assertEquals(20, nodeHeadSide.getData());
+
+        assertNotNull(nodeTailSide, "A busca deve encontrar o 30.");
+        assertEquals(30, nodeTailSide.getData());
     }
 
     /**
@@ -186,7 +238,11 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testSearchElementReturnsNullForMissingData() {
-        // TODO: Inserir elementos, buscar algo inexistente, garantir retorno null
+        list.insertLast(10);
+        list.insertLast(20);
+
+        NodeDouble<Integer> result = list.searchElement(99);
+        assertNull(result, "A busca por um elemento inexistente deve retornar nulo.");
     }
 
     /**
@@ -195,10 +251,14 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testOperationsThrowExceptionWhenListIsEmpty() {
-        // TODO: Usar assertThrows para removeFirst, removeLast, searchElement, getFirstElement, getLastElement
+        assertThrows(IllegalArgumentException.class, () -> list.removeFirst());
+        assertThrows(IllegalArgumentException.class, () -> list.removeLast());
+        assertThrows(IllegalArgumentException.class, () -> list.removeElement(10));
+        assertThrows(IllegalArgumentException.class, () -> list.searchElement(10));
+        assertThrows(IllegalArgumentException.class, () -> list.getFirstElement());
+        assertThrows(IllegalArgumentException.class, () -> list.getLastElement());
     }
 
-    // --- TESTES AVANÇADOS ---
 
     /**
      * Verifica a resiliência do ciclo durante uma série caótica de
@@ -206,7 +266,19 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testInterleavingOperationsMaintainStructuralIntegrity() {
-        // TODO: insertFirst, insertLast, removeFirst, removeLast misturados, verificando tamanho e integridade
+        list.insertFirst(20);
+        list.insertLast(30);
+        list.insertFirst(10);
+        list.removeLast();
+        list.insertLast(40);
+        list.removeFirst();
+
+        assertEquals(2, list.getSize(), "Tamanho final deve ser 2.");
+        assertEquals(20, list.getFirstElement(), "O Head final deve ser 20.");
+        assertEquals(40, list.getLastElement(), "O Tail final deve ser 40.");
+
+        assertEquals(40, list.getHead().getPrevious().getData());
+        assertEquals(20, list.getTail().getNext().getData());
     }
 
     /**
@@ -215,6 +287,22 @@ public class DoublyCircularLinkedListTest {
      */
     @Test
     public void testLargeVolumeOfDataMaintainsPerformanceAndPointers() {
-        // TODO: Inserir 1000 elementos, verificar tamanho, remover tudo, verificar se ficou vazia
+        int volume = 1000;
+
+        for (int i = 0; i < volume; i++) {
+            list.insertLast(i);
+        }
+
+        assertEquals(volume, list.getSize(), "Deve suportar 1000 itens.");
+        assertEquals(0, list.getFirstElement(), "O Head deve ser o item 0.");
+        assertEquals(999, list.getLastElement(), "O Tail deve ser o item 999.");
+
+        assertEquals(999, list.getHead().getPrevious().getData());
+
+        for (int i = 0; i < volume; i++) {
+            list.removeFirst();
+        }
+
+        assertTrue(list.isEmpty(), "A lista deve ficar perfeitamente limpa após o esgotamento do volume.");
     }
 }

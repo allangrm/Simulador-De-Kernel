@@ -16,7 +16,7 @@ public class Main {
         Kernel kernel = new Kernel(2, 11);
 
         Process firstProcess = new Process(1, 3, 0, 4, 0);
-        Process secondProcess = new Process(2, 2, 0, 5, 3); // Sofre I/O a cada 2 ciclos
+        Process secondProcess = new Process(2, 2, 0, 5, 3);
         Process thirdProcess = new Process(3, 1, 0, 3, 0);
 
         kernel.enqueueProcess(firstProcess);

@@ -14,7 +14,7 @@ import main.tads.linked_list.NodeList;
  * </p>
  *
  * @param <T> o tipo de dado ou objeto que o Nó irá armazenar.
- * @author Allan
+ * @author Allan Guilherme
  * @version 1.0
  * @since 2026-03-11
  */

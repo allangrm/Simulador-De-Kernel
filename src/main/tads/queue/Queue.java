@@ -15,38 +15,9 @@ package main.tads.queue;
  * @version 1.0
  */
 public interface Queue<E> {
-    /**
-     * Insere um elemento no final da fila.
-     *
-     * @param element elemento a ser inserido.
-     */
     void enqueue(E element);
-
-    /**
-     * Remove e retorna o elemento na frente da fila.
-     *
-     * @return elemento removido da fila.
-     */
     E dequeue();
-
-    /**
-     * Consulta o elemento na frente da fila sem remove-lo.
-     *
-     * @return elemento atualmente na frente da fila.
-     */
     E peek();
-
-    /**
-     * Informa se a fila esta vazia.
-     *
-     * @return {@code true} quando nao houver elementos armazenados.
-     */
     boolean isEmpty();
-
-    /**
-     * Retorna a quantidade de elementos presentes na fila.
-     *
-     * @return total de elementos armazenados.
-     */
     int size();
 }
