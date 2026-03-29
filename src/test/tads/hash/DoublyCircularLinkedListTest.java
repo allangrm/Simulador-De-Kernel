@@ -45,8 +45,6 @@ public class DoublyCircularLinkedListTest {
         assertNull(list.getTail(), "Tail deve ser nulo");
     }
 
-    // --- TESTES DE INSERÇÃO ---
-
     /**
      * Verifica se a inserção no início em uma lista vazia estabelece
      * o nó como head e tail simultaneamente, apontando para si mesmo.
@@ -162,7 +160,7 @@ public class DoublyCircularLinkedListTest {
     @Test
     public void testRemoveExtremesOnSingleElementListClearsStructure() {
         list.insertFirst(10);
-        list.removeFirst(); // Também poderia ser removeLast()
+        list.removeFirst();
 
         assertTrue(list.isEmpty(), "A lista deve voltar a ficar vazia.");
         assertEquals(0, list.getSize(), "O tamanho deve zerar.");
@@ -181,11 +179,11 @@ public class DoublyCircularLinkedListTest {
         list.insertLast(20);
         list.insertLast(30);
 
-        list.removeElement(10); // Removendo Head
+        list.removeElement(10);
         assertEquals(20, list.getFirstElement(), "O novo Head deve ser 20 após remover o 10.");
         assertEquals(2, list.getSize());
 
-        list.removeElement(30); // Removendo Tail
+        list.removeElement(30);
         assertEquals(20, list.getLastElement(), "O novo Tail deve ser 20 após remover o 30.");
         assertEquals(1, list.getSize());
     }
@@ -200,7 +198,7 @@ public class DoublyCircularLinkedListTest {
         list.insertLast(20);
         list.insertLast(30);
 
-        list.removeElement(20); // Removendo o do meio
+        list.removeElement(20);
 
         assertEquals(2, list.getSize(), "O tamanho deve ser 2.");
         assertEquals(10, list.getFirstElement(), "O Head continua sendo 10.");
